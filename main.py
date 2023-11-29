@@ -1,5 +1,6 @@
 import math
 import random
+from sympy import isprime
 
 
 ###################### OT -> Integer
