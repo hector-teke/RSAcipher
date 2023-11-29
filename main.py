@@ -160,21 +160,21 @@ class Window(QWidget):
         self.e_input.setValidator(validator)
         self.e_input.resize(550, 24)  # Width x Height
         self.e_input.move(100, keys_height + 40)
-        # self.e_input.textChanged.connect(self.validateTextInput)
+        self.e_input.textChanged.connect(self.validate_e_input)
 
         self.d_input = QLineEdit(self)
         self.d_input.setPlaceholderText("Decryption key")
         self.d_input.resize(550, 24)  # Width x Height
         self.d_input.setValidator(validator)
         self.d_input.move(100, keys_height + 40 + 26)
-        # self.d_input.textChanged.connect(self.validateTextInput)
+        self.d_input.textChanged.connect(self.validate_d_input)
 
         self.n_input = QLineEdit(self)
         self.n_input.setPlaceholderText("Module")
         self.n_input.setValidator(validator)
         self.n_input.resize(550, 24)  # Width x Height
         self.n_input.move(100, keys_height + 40 + 52)
-        # self.n_input.textChanged.connect(self.validateTextInput)
+        self.n_input.textChanged.connect(self.validate_n_input)
 
         # ENCRYPTION
 
@@ -189,7 +189,6 @@ class Window(QWidget):
         self.text_input.setPlaceholderText("Insert open text")
         self.text_input.resize(560, 24)  # Width x Height
         self.text_input.move(20, encryption_height + 30)
-        #self.text_input.textChanged.connect(self.validateTextInput)
 
         self.text_output = QLineEdit(self)
         self.text_output.setReadOnly(True)
@@ -201,11 +200,33 @@ class Window(QWidget):
         encrypt_button.setText("Encrypt")
         encrypt_button.resize(60, 56)
         encrypt_button.move(590, encryption_height + 30)
-        #encrypt_button.clicked.connect(self.startEncryption)
+        # encrypt_button.clicked.connect(self.startEncryption)
 
+        # DECRYPTION
 
+        decryption_height = 260
 
+        decryption_title = QLabel(self)
+        decryption_title.setText("Decryption:")
+        decryption_title.setFont(QFont('Arial', 15))
+        decryption_title.move(20, decryption_height)
 
+        self.cipher_input = QLineEdit(self)
+        self.cipher_input.setPlaceholderText("Insert cipher text")
+        self.cipher_input.resize(560, 24)  # Width x Height
+        self.cipher_input.move(20, decryption_height + 30)
+
+        self.cipher_output = QLineEdit(self)
+        self.cipher_output.setReadOnly(True)
+        self.cipher_output.setPlaceholderText("Open text will appear here")
+        self.cipher_output.resize(560, 24)  # Width x Height
+        self.cipher_output.move(20, decryption_height + 60)
+
+        decrypt_button = QPushButton(self)
+        decrypt_button.setText("Decrypt")
+        decrypt_button.resize(60, 56)
+        decrypt_button.move(590, decryption_height + 30)
+        # decrypt_button.clicked.connect(self.startDecryption)
 
 
 
@@ -216,6 +237,26 @@ class Window(QWidget):
         self.d_input.setText(str(d))
         self.n_input.setText(str(n))
 
+    def validate_e_input(self):
+        text = self.e_input.text()
+
+        if text != '' and text[0] == '-':
+            self.e_input.setText(text[1:])
+            self.e_input.setCursorPosition(0)
+
+    def validate_d_input(self):
+        text = self.d_input.text()
+
+        if text != '' and text[0] == '-':
+            self.d_input.setText(text[1:])
+            self.d_input.setCursorPosition(0)
+
+    def validate_n_input(self):
+        text = self.n_input.text()
+
+        if text != '' and text[0] == '-':
+            self.n_input.setText(text[1:])
+            self.n_input.setCursorPosition(0)
 
 
 
