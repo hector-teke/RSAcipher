@@ -59,16 +59,72 @@ def int_to_block(num):
 ###################### Encryption and decryption
 
 def encryption(OT, e, n):
-    return pow(OT, e, n)
+    CT = []
+    for blk in text_to_vector(OT):
+        CT.append(pow(blk, e, n))
+
+    return CT
 
 
 def decryption(CT, d, n):
-    return pow(CT, d, n)
+    OT = []
+    for blk in CT:
+        OT.append(pow(blk, d, n))
+
+    return vector_to_text(OT)
+
+
+###################### Keys generation
+
+def generate_primes(bits):
+    p1 = None
+    p2 = None
+
+    while p1 == p2:
+        p1 = random.getrandbits(bits)
+        p1 |= (1 << bits - 1) | 1
+        while not isprime(p1):
+            p1 += 2  # Avoid even numbers
+
+        p2 = random.getrandbits(bits)
+        p2 |= (1 << bits - 1) | 1
+        while not isprime(p2):
+            p2 += 2  # Avoid even numbers
+
+    return p1, p2
+
+
+def select_e(phi):
+    while True:
+        e = random.randint(2, phi - 1)      # 1 < e < phi
+        if math.gcd(e, phi) == 1:  # GCD(e, phi) = 1
+            break
+    return e
+
+
+def generate_keys(bits):
+    p, q = generate_primes(bits)
+    n = p * q
+    phi = (p - 1) * (q - 1)
+    e = select_e(phi)
+    d = pow(e, -1, phi)
+
+    return e, d, n
+
+
 
 
 if __name__ == '__main__':
-    vector = text_to_vector("This is a plain-text")
 
-    print(vector_to_text(vector))
+    e, d, n = generate_keys(112)
 
-# 112 key
+    print("Key for encryption: ", e)
+    print("Key for decryption: ", d)
+    print("Module: ", n)
+
+    CT = encryption("Music!", e, n)
+    print("CT: ", CT)
+
+    OT = decryption(CT, d, n)
+    print("OT: ", OT)
+
