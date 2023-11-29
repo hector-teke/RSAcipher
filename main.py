@@ -1,6 +1,12 @@
 import math
 import random
+import sys
+
+from PyQt6.QtGui import QFont, QIntValidator, QValidator
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QMessageBox, QSpinBox
+
 from sympy import isprime
+
 
 
 ###################### OT -> Integer
@@ -113,10 +119,90 @@ def generate_keys(bits):
 
 
 
+# USER INTERFACE ################################################################################
+
+class Window(QWidget):
+
+    def __init__(self):
+        super().__init__()
+        self.initializeUI()
+
+    def initializeUI(self):
+        self.setGeometry(100, 100, 680, 370)  # PosX, PosY, Width, Height
+        self.setWindowTitle("RSA Cipher")
+        self.generate_layout()
+        self.show()
+
+    def generate_layout(self):
+        keys_height = 20
+
+        bits_hint = QLabel(self)
+        bits_hint.setText("Bit length for the keys:")
+        bits_hint.setFont(QFont('Arial', 10))
+        bits_hint.move(240, keys_height + 5)
+
+        self.bits_input = QSpinBox(self)
+        self.bits_input.setRange(20, 1024)
+        self.bits_input.setValue(112)
+        self.bits_input.resize(50, 24)  # Width x Height
+        self.bits_input.move(380, keys_height)
+
+        generate_keys_button = QPushButton(self)
+        generate_keys_button.setText("Generate\nKeys")
+        generate_keys_button.resize(70, 78)
+        generate_keys_button.move(20, keys_height + 40)
+        generate_keys_button.clicked.connect(self.generateKeys)
+
+        validator = QIntValidator()
+
+        self.e_input = QLineEdit(self)
+        self.e_input.setPlaceholderText("Encryption key")
+        self.e_input.setValidator(validator)
+        self.e_input.resize(550, 24)  # Width x Height
+        self.e_input.move(100, keys_height + 40)
+        # self.e_input.textChanged.connect(self.validateTextInput)
+
+        self.d_input = QLineEdit(self)
+        self.d_input.setPlaceholderText("Decryption key")
+        self.d_input.resize(550, 24)  # Width x Height
+        self.d_input.setValidator(validator)
+        self.d_input.move(100, keys_height + 40 + 26)
+        # self.d_input.textChanged.connect(self.validateTextInput)
+
+        self.n_input = QLineEdit(self)
+        self.n_input.setPlaceholderText("Module")
+        self.n_input.setValidator(validator)
+        self.n_input.resize(550, 24)  # Width x Height
+        self.n_input.move(100, keys_height + 40 + 52)
+        # self.n_input.textChanged.connect(self.validateTextInput)
+
+        encryption_height = 160
+
+        encryption_title = QLabel(self)
+        encryption_title.setText("Encryption:")
+        encryption_title.setFont(QFont('Arial', 15))
+        encryption_title.move(20, encryption_height)
+
+
+
+
+
+
+
+    def generateKeys(self):
+        e, d, n = generate_keys(self.bits_input.value())
+
+        self.e_input.setText(str(e))
+        self.d_input.setText(str(d))
+        self.n_input.setText(str(n))
+
+
+
+
 
 if __name__ == '__main__':
 
-    e, d, n = generate_keys(112)
+    """e, d, n = generate_keys(112)
 
     print("Key for encryption: ", e)
     print("Key for decryption: ", d)
@@ -126,5 +212,8 @@ if __name__ == '__main__':
     print("CT: ", CT)
 
     OT = decryption(CT, d, n)
-    print("OT: ", OT)
+    print("OT: ", OT)"""
 
+    app = QApplication(sys.argv)
+    window = Window()
+    sys.exit(app.exec())
