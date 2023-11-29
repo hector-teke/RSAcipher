@@ -176,12 +176,32 @@ class Window(QWidget):
         self.n_input.move(100, keys_height + 40 + 52)
         # self.n_input.textChanged.connect(self.validateTextInput)
 
+        # ENCRYPTION
+
         encryption_height = 160
 
         encryption_title = QLabel(self)
         encryption_title.setText("Encryption:")
         encryption_title.setFont(QFont('Arial', 15))
         encryption_title.move(20, encryption_height)
+
+        self.text_input = QLineEdit(self)
+        self.text_input.setPlaceholderText("Insert open text")
+        self.text_input.resize(560, 24)  # Width x Height
+        self.text_input.move(20, encryption_height + 30)
+        #self.text_input.textChanged.connect(self.validateTextInput)
+
+        self.text_output = QLineEdit(self)
+        self.text_output.setReadOnly(True)
+        self.text_output.setPlaceholderText("Encrypted text will appear here")
+        self.text_output.resize(560, 24)  # Width x Height
+        self.text_output.move(20, encryption_height + 60)
+
+        encrypt_button = QPushButton(self)
+        encrypt_button.setText("Encrypt")
+        encrypt_button.resize(60, 56)
+        encrypt_button.move(590, encryption_height + 30)
+        #encrypt_button.clicked.connect(self.startEncryption)
 
 
 
