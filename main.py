@@ -200,7 +200,7 @@ class Window(QWidget):
         encrypt_button.setText("Encrypt")
         encrypt_button.resize(60, 56)
         encrypt_button.move(590, encryption_height + 30)
-        # encrypt_button.clicked.connect(self.startEncryption)
+        encrypt_button.clicked.connect(self.startEncryption)
 
         # DECRYPTION
 
@@ -226,7 +226,7 @@ class Window(QWidget):
         decrypt_button.setText("Decrypt")
         decrypt_button.resize(60, 56)
         decrypt_button.move(590, decryption_height + 30)
-        # decrypt_button.clicked.connect(self.startDecryption)
+        decrypt_button.clicked.connect(self.startDecryption)
 
 
 
@@ -258,8 +258,21 @@ class Window(QWidget):
             self.n_input.setText(text[1:])
             self.n_input.setCursorPosition(0)
 
+    def startEncryption(self):
+        self.text_output.setText(str(encryption(self.text_input.text(), int(self.e_input.text()), int(self.n_input.text())))[1:-1])
 
 
+
+    def startDecryption(self):
+        text = self.cipher_input.text()
+
+        if text != '':
+            text_vector = text.split(", ")
+            vector = [int(num_str) for num_str in text_vector]
+
+            self.cipher_output.setText(decryption(vector, int(self.d_input.text()), int(self.n_input.text())))
+        else:
+            self.cipher_output.setText('')
 
 if __name__ == '__main__':
 
