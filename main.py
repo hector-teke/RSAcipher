@@ -142,7 +142,7 @@ class Window(QWidget):
         bits_hint.move(240, keys_height + 5)
 
         self.bits_input = QSpinBox(self)
-        self.bits_input.setRange(20, 1024)
+        self.bits_input.setRange(30, 1024)
         self.bits_input.setValue(112)
         self.bits_input.resize(50, 24)  # Width x Height
         self.bits_input.move(380, keys_height)
@@ -259,20 +259,30 @@ class Window(QWidget):
             self.n_input.setCursorPosition(0)
 
     def startEncryption(self):
-        self.text_output.setText(str(encryption(self.text_input.text(), int(self.e_input.text()), int(self.n_input.text())))[1:-1])
-
-
+        if self.check_keys():
+            self.text_output.setText(str(encryption(self.text_input.text(), int(self.e_input.text()), int(self.n_input.text())))[1:-1])
+        else:
+            self.text_output.setText('')
 
     def startDecryption(self):
         text = self.cipher_input.text()
 
-        if text != '':
+        if self.check_keys() and text != '':
             text_vector = text.split(", ")
             vector = [int(num_str) for num_str in text_vector]
 
             self.cipher_output.setText(decryption(vector, int(self.d_input.text()), int(self.n_input.text())))
         else:
             self.cipher_output.setText('')
+
+    def check_keys(self):
+        if self.e_input.text() == '' or self.d_input.text() == '' or self.n_input.text() == '':
+            QMessageBox.warning(self, "Error",
+            "The keys or module are missing",
+            QMessageBox.StandardButton.Close, QMessageBox.StandardButton.Close)
+
+            return False
+        return True
 
 if __name__ == '__main__':
 
